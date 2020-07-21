@@ -106,12 +106,10 @@ class Utility
      */
     public function moveCategory($categoryId,$parentId,$afterId = null)
     {
-	//$this->logger->alert('moveCategory', array()) ; 
         $isCategoryMoveSuccess = false;
         try {
             $isCategoryMoveSuccess = $this->categoryManagement->move($categoryId, $parentId, $afterId);
         } catch (Exception $exception) {
-            //throw new Exception($exception->getMessage().' '.$categoryId);
 	    $this->logger->alert('moveCategory failed '.$categoryId);
         }
         return $isCategoryMoveSuccess;
@@ -136,7 +134,7 @@ class Utility
      */
     public function getBlockSourceDirectory()
     {    	
-		$this->logger->alert('getBlockSourceDirectory', []);
+	$this->logger->alert('getBlockSourceDirectory', []);
         return sprintf(
             '%s/%s',
             $this->reader->getModuleDir(Dir::MODULE_VIEW_DIR, $this->sourceModule),
@@ -176,11 +174,10 @@ class Utility
 	    /*
 	    Allow the naming convention of the blocks to 
 	    determine whether the block is active or not,
-	    this was you make some active, some not depending
-	    on your requirements
+	    this way you can set the status in individual
+	    blocks at the point of creation
 	    */
 	    $active = (substr( $id, -6 ) === '-active') ? true : false;
-		
             $title = str_replace('-', ' ', $id);
             $contents = file_get_contents($path);
             $this->makeBlock($id, $title, $contents, $active);
@@ -212,7 +209,7 @@ class Utility
         string $identifier,
         string $title,
         string $content,
-	boolean $active;
+	boolean $active,
         array $stores = [0]
     ) {
         try {
@@ -230,7 +227,6 @@ class Utility
 
         $block->setContent($content);
         try {
-            $this->logger->alert('saveBlock '.$title, array()) ;
             $this->blockRepository->save($block);
         } catch (NoSuchEntityException $exception) {
             $this->logger->alert('saveBlock ERROR '.$exception, array()) ;
