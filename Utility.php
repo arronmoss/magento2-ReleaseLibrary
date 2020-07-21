@@ -173,9 +173,17 @@ class Utility
             }
 
             $id = pathinfo($block, PATHINFO_FILENAME);
+	    /*
+	    Allow the naming convention of the blocks to 
+	    determine whether the block is active or not,
+	    this was you make some active, some not depending
+	    on your requirements
+	    */
+	    $active = (substr( $id, -6 ) === '-active') ? true : false;
+		
             $title = str_replace('-', ' ', $id);
             $contents = file_get_contents($path);
-            $this->makeBlock($id, $title, $contents);
+            $this->makeBlock($id, $title, $contents, $active);
         }
     }
 
@@ -204,6 +212,7 @@ class Utility
         string $identifier,
         string $title,
         string $content,
+	boolean $active;
         array $stores = [0]
     ) {
         try {
@@ -215,7 +224,7 @@ class Utility
 
             $block->setTitle($title)
                 ->setIdentifier($identifier)
-                ->setIsActive(true)
+                ->setIsActive($active)
                 ->setData('stores', $stores);
         }
 
